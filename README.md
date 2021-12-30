@@ -46,7 +46,7 @@ then just run the batch file: build.bat
 build.bat
 ```
 # Run
-
+## Interactive Console
 Run the relay_ft245r.exe
 To turn a relay on use the "r" command. For example, for turning relay 2 on type:
 ```
@@ -55,6 +55,24 @@ r 2 on
 You can use "all" to operate all relays, for example:
 ```
 r all off
+```
+
+## Command Line Arguments
+To enable execution of the commands to turn on and off relays, relay_ft245r.exe takes 2 command lines arguments, r and s.
+
+> r indicates the relay number 1~8.
+> s indicates the on, off state of the relay
+
+Both arguments are required when operating in command line mode.
+
+To turn on relay 2:
+```
+relay_ft245r.exe r 2 s on
+```
+
+To turn off relay 2:
+```
+relay_ft245r.exe r 2 s off
 ```
 
 # Limitations
