@@ -55,6 +55,9 @@ Copyright (c) 2019 Marcelo Varanda - MIT License\n\n"
    ?             - same than help\n\n"
 
 #define MAX_NUM_PARAMS 5
+#define RELAY_NUMBER_ARG "r"
+#define RELAY_STATE_ARG "s"
+#define DEBUG 0
 
 char cmdBuffer[256];
 char * par[MAX_NUM_PARAMS];
@@ -138,14 +141,16 @@ static FT_STATUS openDevice (int devIdx, FT_HANDLE * ftHandle)
   status = FT_GetDeviceInfoList(devInfo, &numDevs);
   if (status == FT_OK) {
     for (i = 0; i < numDevs; i++) {
-      // printf("Dev %d:\n", (int) i);
-      // printf("Flags=0x%x\n", (int) devInfo[i].Flags);
-      // printf("Type=0x%x\n", (int) devInfo[i].Type);
-      // printf("ID=0x%x\n", (int) devInfo[i].ID);
-      // printf("LocId=0x%x\n", (int) devInfo[i].LocId);
-      // printf("SerialNumber=%s\n", devInfo[i].SerialNumber);
-      // printf("Description=%s\n", devInfo[i].Description);
-      // printf("\n");
+      if (DEBUG) {
+        printf("Dev %d:\n", (int) i);
+        printf("Flags=0x%x\n", (int) devInfo[i].Flags);
+        printf("Type=0x%x\n", (int) devInfo[i].Type);
+        printf("ID=0x%x\n", (int) devInfo[i].ID);
+        printf("LocId=0x%x\n", (int) devInfo[i].LocId);
+        printf("SerialNumber=%s\n", devInfo[i].SerialNumber);
+        printf("Description=%s\n", devInfo[i].Description);
+        printf("\n");
+      }
       if (strcmp(devInfo[i].Description, FT245R_DESCRIPTION) == 0) {
         printf("found FT245R at idx = %d, Serial Number: %s\n", (int) i, devInfo[i].SerialNumber);
         break;
@@ -247,22 +252,31 @@ void cmd_r(void)
   }
 }
 
-void processCommandLine(char *argv[]) {
+void processCommandLine(int numberOfArgs, char *args[]) {
   printf("\nWe'll process command line arguments here and control the relay.\n");
+  char* relayNumber = "0";
+  char* relayState = "off";
+
+  for (int i = 1; i < numberOfArgs; i++) {
+    if (strcmp(args[i], RELAY_NUMBER_ARG) == 0) {
+      if (DEBUG) printf("Setting relay number: %s\n", args[i + 1]);
+      relayNumber = args[++i];
+    }
+    else if (strcmp(args[i], RELAY_STATE_ARG) == 0) {
+      if (DEBUG) printf("Setting relay state: %s\n", args[i + 1]);
+      relayState = args[++i];
+    }
+  }
+
+  par[0] = "";
+  par[1] = relayNumber;
+  par[2] = relayState;
+  num_par = 3;
+  cmd_r();
 }
 
 int main(int argc, char *argv[])
 {
-
-  printf("Number of arguments provided %d", argc);
-
-  if (argc > 1) {
-    processCommandLine(argv);
-    
-    return 0;
-  }
-
-
   FT_STATUS ftStatus; 
   DWORD data_written; // number of bytes written
   int quitoff = 0;
@@ -272,6 +286,17 @@ int main(int argc, char *argv[])
   ftStatus = openDevice(0, &ftHandle);
   if (ftStatus != FT_OK) {
     printf("openDevice fail, code: %d\n", (int) ftStatus); //check for error
+    return 0;
+  }
+
+  printf("Number of arguments provided %d", argc);
+
+  if (argc > 1) {
+    processCommandLine(argc, argv);
+    
+    ftStatus = FT_Close(ftHandle);
+
+    if (DEBUG) printf("Close status, %i", (int) ftStatus);
     return 0;
   }
 
