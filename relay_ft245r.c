@@ -38,8 +38,10 @@ https://osdn.net/projects/mingw/downloads/68260/mingw-get-setup.exe/
 #define FT245R_DESCRIPTION "FT245R USB FIFO"
 
 #define HELLO \
-"\nRelay FT245R - ver 0.01\n\
-source: https://github.com/mvaranda/relay_ft245r\n\
+"\nRelay FT245R - ver 0.2\n\
+Forked source: https://github.com/mhorner/relay_ft245r\n\
+Copyright (c) 2021 Matt Horner - MIT License\n\
+Original source: https://github.com/mvaranda/relay_ft245r\n\
 Copyright (c) 2019 Marcelo Varanda - MIT License\n\n"
 
 
@@ -245,8 +247,22 @@ void cmd_r(void)
   }
 }
 
-int main()
+void processCommandLine(char *argv[]) {
+  printf("\nWe'll process command line arguments here and control the relay.\n");
+}
+
+int main(int argc, char *argv[])
 {
+
+  printf("Number of arguments provided %d", argc);
+
+  if (argc > 1) {
+    processCommandLine(argv);
+    
+    return 0;
+  }
+
+
   FT_STATUS ftStatus; 
   DWORD data_written; // number of bytes written
   int quitoff = 0;
