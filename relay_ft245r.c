@@ -46,7 +46,10 @@ Copyright (c) 2019 Marcelo Varanda - MIT License\n\n"
 
 
 #define USAGE \
-"\nMenu:\n\
+"\nCommand line arguments:\n\
+   r N           - where N is the relay number (1~8) or \'all\'\n\
+   s on|off      - on or off\n\n\
+\nMenu (with no command arguments):\n\
    r N on|off    - where N is the relay number (1~8) or \'all\'\n\
    list          - show all FTDI devices\n\
    quit          - quit this app\n\
@@ -213,7 +216,6 @@ static void parseInput(void)
 }
 void cmd_r(void)
 {
-  printf("command r\n");
   DWORD data_written;
   FT_STATUS ftStatus;
   unsigned int n = 0;
@@ -253,9 +255,8 @@ void cmd_r(void)
 }
 
 void processCommandLine(int numberOfArgs, char *args[]) {
-  printf("\nWe'll process command line arguments here and control the relay.\n");
-  char* relayNumber = "0";
-  char* relayState = "off";
+  char* relayNumber = "";
+  char* relayState = "";
 
   for (int i = 1; i < numberOfArgs; i++) {
     if (strcmp(args[i], RELAY_NUMBER_ARG) == 0) {
@@ -266,6 +267,12 @@ void processCommandLine(int numberOfArgs, char *args[]) {
       if (DEBUG) printf("Setting relay state: %s\n", args[i + 1]);
       relayState = args[++i];
     }
+  }
+
+  if (strcmp(relayNumber, "") == 0 || strcmp(relayState, "") == 0) {
+    printf("\n\nCommand line arguments did not parse correctly.  Check arguments and try again.\n");
+    printf(USAGE);
+    return;
   }
 
   par[0] = "";
@@ -289,8 +296,6 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  printf("Number of arguments provided %d", argc);
-
   if (argc > 1) {
     processCommandLine(argc, argv);
     
@@ -301,7 +306,8 @@ int main(int argc, char *argv[])
   }
 
   printUsage();
-  
+
+  printf("command r\n");
   while(1) {
     parseInput();
     if (num_par == 0) {
