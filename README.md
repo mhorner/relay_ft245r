@@ -5,8 +5,17 @@
 Console app to control popular relay board based on FTDI's FT245R chip.
 
 # Dependency
+## FTDI Chip Drivers
 It requires D2XX drivers installed. Available at:
 https://www.ftdichip.com/Drivers/D2XX.htm
+
+## libgcc_s_dw2-1.dll
+When installing on a new environment, it's best to copy the libgcc_s_dw2-1.dll file to the following folders:
+
+* C:\Windows\system32
+* C:\Windows\SysWOW64
+
+If the machine is a 64-bit machine, the file must be copied to C:\Windows\SysWOW64 folder.  If it is not found, the program will error and not run.
 
 # Precompiled binary
 relay_ft245r.exe is available to run. Just connect a unique relay board and run it. Use "help" or "?" to see the menu. Also, see "Run" and "Limitation" sessions below.
