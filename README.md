@@ -54,6 +54,21 @@ then just run the batch file: build.bat
 ```
 build.bat
 ```
+
+# macOS build (native)
+Install FTDI's D2XX drivers for macOS. Ensure `FTD2XX.H` and `libftd2xx.dylib`
+are available (common locations: `/opt/homebrew/include`, `/opt/homebrew/lib`
+or `/usr/local/include`, `/usr/local/lib`).
+
+Build:
+```
+./build_macos.sh
+```
+
+If your install lives elsewhere:
+```
+FTD2XX_INCLUDE=/path/to/include FTD2XX_LIB=/path/to/lib ./build_macos.sh
+```
 # Run
 ## Interactive Console
 Run the relay_ft245r.exe
@@ -82,6 +97,12 @@ relay_ft245r.exe r 2 s on
 To turn off relay 2:
 ```
 relay_ft245r.exe r 2 s off
+```
+
+# macOS run
+```
+./relay_ft245r_macos r 2 s on
+./relay_ft245r_macos r all s off
 ```
 
 # Limitations
