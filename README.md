@@ -114,6 +114,29 @@ relay_ft245r.exe r 2 s off
 ./relay.sh 2 blink 5 250
 ```
 
+# Microsoft Teams meeting status (macOS)
+This uses macOS UI scripting to detect if Teams appears to be in a call.
+You may need to grant Accessibility permission to your terminal.
+
+Check status:
+```
+./teams_status.sh
+```
+
+Use it to toggle a relay while in a call:
+```
+if ./teams_status.sh; then
+  ./relay.sh 1 on
+else
+  ./relay.sh 1 off
+fi
+```
+
+Watch mode (poll every 2000 ms and toggle relay 2):
+```
+./teams_status.sh watch 2000
+```
+
 # Limitations
 
 The current code grabs the first FT245R device from the enumeration. It operates only one relay board.
