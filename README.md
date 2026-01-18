@@ -105,6 +105,15 @@ relay_ft245r.exe r 2 s off
 ./relay_ft245r_macos r all s off
 ```
 
+# relay.sh helper
+```
+./relay.sh 2 on
+./relay.sh 2 off
+./relay.sh 2 blink
+./relay.sh 2 blink 5
+./relay.sh 2 blink 5 250
+```
+
 # Limitations
 
 The current code grabs the first FT245R device from the enumeration. It operates only one relay board.
